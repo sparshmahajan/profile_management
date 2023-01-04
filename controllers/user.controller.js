@@ -48,8 +48,10 @@ const login = (req, res) => {
                 const result = await Decrypt(password, foundUser.password);
                 if (result === true) {
                     const token = getToken({ userId: foundUser._id, email: foundUser.email });
-                    const { firstName, middleName, lastName, email, role, department } = foundUser;
-                    res.status(200).send({ token, user: { firstName, middleName, lastName, email, role, department } });
+                    const { firstName, middleName, lastName, email, role, department, lastLogin } = foundUser;
+                    foundUser.lastLogin = new Date();
+                    foundUser.save();
+                    res.status(200).send({ token, user: { firstName, middleName, lastName, email, role, department,lastLogin } });
                 }
                 else {
                     res.status(400).send({ message: "Invalid Password" });
